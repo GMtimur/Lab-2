@@ -1,16 +1,25 @@
 #include <iostream>
-#include <stack.h>
+#include "stack.h"
 
-int main()
-{
-	stack<int>* st = new stack<int>();
-	for (int i = 0; i < 10; i++)
-	{
-		st->push(i);
-	}
+using namespace std;
 
-	for (int i = 0; i < 10; i++)
+int main() {
+    Stack<int> stack;
+    int value;
+    
+    while(cin >> value && value != 0) 
 	{
-		std::cout << st->pop();
-	}
+        stack.push(value);
+    }
+    
+    while(stack.count() > 0) 
+	{
+        int num = stack.pop();
+        if(num > 0) 
+		{
+            cout << num << " ";
+        }
+    }
+    
+    return 0;
 }

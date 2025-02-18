@@ -1,26 +1,72 @@
 #pragma once
 
+using namespace std;
+
 template <typename T>
-struct stack
+
+class Stack 
 {
-	void push(T)
+private:
+    struct Node 
 	{
+        T data;
+        Node* next;
+        Node(T data) : data(data), next(nullptr) {}
+    };
+    Node* top;
+    int size;
 
-	}
-	T pop()
+public:
+    Stack() : top(nullptr), size(0) {}
+    ~Stack() 
 	{
+        clear();
+    }
 
-	}
-	T peek()
+    void push(T value) 
 	{
+        Node* newNode = new Node(value);
+        newNode->next = top;
+        top = newNode;
+        size++;
+    }
 
-	}
-	int count()
+    T pop() 
 	{
+        if (top == nullptr) 
+		{
+            throw out_of_range("Stack is empty");
+        }
+        Node* temp = top;
+        T value = temp->data;
+        top = top->next;
+        delete temp;
+        size--;
+        return value;
+    }
 
-	}
-	void clear()
+    T peek() const 
 	{
+        if (top == nullptr) 
+		{
+            throw out_of_range("Stack is empty");
+        }
+        return top -> data;
+    }
 
-	}
+    int count() const 
+	{
+        return size;
+    }
+
+    void clear() 
+	{
+        while (top != nullptr) 
+		{
+            Node* temp = top;
+            top = top -> next;
+            delete temp;
+        }
+        size = 0;
+    }
 };
