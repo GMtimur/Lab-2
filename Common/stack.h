@@ -1,9 +1,23 @@
 #pragma once
+#include <stdexcept>
 
 using namespace std;
 
 template <typename T>
 
+/// <summary>
+/// Класс `Stack` реализует структуру данных "стек" с использованием связного списка.
+/// Стек работает по принципу "Последний пришел, первый вышел" (LIFO — Last In, First Out).
+/// </summary>
+/// <typeparam name="T">Тип данных, хранящихся в стеке.</typeparam>
+/// <remarks>
+/// Основные операции:
+/// - `push(T value)`: Добавляет элемент на вершину стека.
+/// - `pop()`: Удаляет и возвращает элемент с вершины стека.
+/// - `peek()`: Возвращает элемент с вершины стека без его удаления.
+/// - `count()`: Возвращает количество элементов в стеке.
+/// - `clear()`: Очищает стек.
+/// </remarks>
 class Stack 
 {
 private:
@@ -37,10 +51,8 @@ public:
 		{
             throw out_of_range("Stack is empty");
         }
-        Node* temp = top;
-        T value = temp->data;
-        top = top->next;
-        delete temp;
+        T value = top->data;
+		top = top->next;
         size--;
         return value;
     }
