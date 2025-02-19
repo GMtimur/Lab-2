@@ -33,7 +33,7 @@ private:
 public:
     Stack() : top(nullptr), size(0) {}
     ~Stack() 
-	{
+    {
         clear();
     }
 
