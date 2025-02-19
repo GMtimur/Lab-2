@@ -52,7 +52,7 @@ public:
             throw out_of_range("Stack is empty");
         }
         T value = top->data;
-		top = top->next;
+	top = top->next;
         size--;
         return value;
     }
