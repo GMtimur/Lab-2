@@ -22,7 +22,7 @@ class Stack
 {
 private:
     struct Node 
-	{
+    {
         T data;
         Node* next;
         Node(T data) : data(data), next(nullptr) {}
