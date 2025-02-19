@@ -46,7 +46,7 @@ public:
     T pop() 
     {
         if (top == nullptr) 
-	    {
+        {
             throw out_of_range("Stack is empty");
         }
         T value = top->data;
@@ -58,7 +58,7 @@ public:
     T peek() const 
     {
         if (top == nullptr) 
-	    {
+        {
             throw out_of_range("Stack is empty");
         }
         return top -> data;
@@ -72,7 +72,7 @@ public:
     void clear() 
     {
         while (top != nullptr) 
-	    {
+        {
             Node* temp = top;
             top = top -> next;
             delete temp;
