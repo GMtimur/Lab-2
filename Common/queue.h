@@ -3,20 +3,12 @@
 
 using namespace std;
 
-template <typename T>
-
 /// <summary>
 /// Класс `Queue` реализует структуру данных "очередь" с использованием связного списка.
 /// Очередь работает по принципу "Первый пришел, первый вышел" (FIFO — First In, First Out).
 /// </summary>
-/// <typeparam name="T">Тип данных, хранящихся в очереди.</typeparam>
-/// <remarks>
-/// Основные операции:
-/// - `queue(T value)`: Добавляет элемент в конец очереди.
-/// - `unqueue()`: Удаляет и возвращает элемент из начала очереди.
-/// - `count()`: Возвращает количество элементов в очереди.
-/// - `clear()`: Очищает очередь.
-/// </remarks>
+/// <typeparam name="T">Тип данных, хранящихся в очереди.</typeparam>ы
+template <typename T>
 class Queue 
 {
 private:
@@ -31,13 +23,23 @@ private:
     int counter;
 
 public:
+    /// <summary>
+    /// Конструктор по умолчанию. Инициализирует пустую очередь.
+    /// </summary>
     Queue() : head(nullptr), tail(nullptr), counter(0) {}
 
+    /// <summary>
+    /// Деструктор. Очищает очередь, освобождая всю выделенную память.
+    /// </summary>
     ~Queue() 
     {
         clear();
     }
 
+    /// <summary>
+    /// Добавляет элемент в конец очереди.
+    /// </summary>
+    /// <param name="data">Элемент, который нужно добавить в очередь.</param>
     void queue(T data) 
     {
         Node* newNode = new Node(data);
@@ -53,6 +55,11 @@ public:
         counter++;
     }
 
+    /// <summary>
+    /// Удаляет и возвращает элемент из начала очереди.
+    /// </summary>
+    /// <returns>Элемент, удаленный из начала очереди.</returns>
+    /// <exception cref="std::out_of_range">Выбрасывается, если очередь пуста.</exception>
     T unqueue() 
     {
         if (head == nullptr) 
@@ -71,11 +78,18 @@ public:
         return data;
     }
 
+    /// <summary>
+    /// Возвращает количество элементов в очереди.
+    /// </summary>
+    /// <returns>Количество элементов в очереди.</returns>
     int count() const 
     {
         return counter;
     }
 
+    /// <summary>
+    /// Очищает очередь, удаляя все элементы.
+    /// </summary>
     void clear() 
     {
         while (head != nullptr) 
@@ -86,83 +100,5 @@ public:
         }
         tail = nullptr;
         counter = 0;
-    }
-
-    void insertBeforeNegatives() 
-    {
-        Node* current = head;
-        Node* prev = nullptr;
-        while (current != nullptr) 
-        {
-            if (current->data < 0) 
-            {
-                Node* newNode = new Node(1);
-                if (prev == nullptr) 
-                {
-                    newNode->next = head;
-                    head = newNode;
-                }
-                else 
-                {
-                    newNode->next = current;
-                    prev->next = newNode;
-                }
-                counter++;
-                prev = newNode;
-            }
-            else 
-            {
-                prev = current;
-            }
-            current = current->next;
-        }
-    }
-
-    void removeNegatives() 
-    {
-        Node* current = head;
-        Node* prev = nullptr;
-        while (current != nullptr) 
-        {
-            if (current->data < 0) 
-            {
-                Node* temp = current;
-                if (prev == nullptr) 
-                {
-                    head = current->next;
-                } 
-                else 
-                {
-                    prev->next = current->next;
-                }
-                if (current == tail) 
-                {
-                    tail = prev;
-                }
-                current = current->next;
-                delete temp;
-                counter--;
-            } 
-            else 
-            {
-                prev = current;
-                current = current->next;
-            }
-        }
-    }
-
-    int countOccurrences(T value) const
-    {
-        int count = 0;
-        Node* current = head;
-        while (current != nullptr) 
-        {
-            if (current->data == value) 
-            {
-                count++;
-            }
-            current = current->next;
-        }
-        return count;
     }
 };

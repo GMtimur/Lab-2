@@ -4,6 +4,70 @@
 
 using namespace std;
 
+/// <summary>
+/// Вставляет число 1 перед каждым отрицательным числом в очереди.
+/// </summary>
+/// <param name="queue">Очередь, в которую нужно вставить элементы.</param>
+template <typename T>
+void insertBeforeNegatives(Queue<T>& queue) 
+{
+    int initialCount = queue.count();
+    for (int i = 0; i < initialCount; i++) 
+    {
+        T temp_num = queue.unqueue();
+        if (temp_num < 0) 
+        {
+            queue.queue(1);
+            queue.queue(temp_num);
+        } 
+        else 
+        {
+            queue.queue(temp_num);
+        }
+    }
+}
+
+/// <summary>
+/// Удаляет все отрицательные числа из очереди.
+/// </summary>
+/// <param name="queue">Очередь, из которой нужно удалить элементы.</param>
+template <typename T>
+void removeNegatives(Queue<T>& queue) 
+{
+    int initialCount = queue.count();
+    for (int i = 0; i < initialCount; i++) 
+    {
+        T temp_num = queue.unqueue();
+        if (temp_num >= 0) 
+        {
+            queue.queue(temp_num);
+        }
+    }
+}
+
+/// <summary>
+/// Подсчитывает количество вхождений определенного числа в очереди.
+/// </summary>
+/// <param name="queue">Очередь, в которой нужно подсчитать вхождения.</param>
+/// <param name="value">Число, количество вхождений которого нужно подсчитать.</param>
+/// <returns>Количество вхождений числа в очереди.</returns>
+template <typename T>
+int countOccurrences(Queue<T>& queue, T value) 
+{
+    int counter = 0;
+    int initialCount = queue.count();
+    for (int i = 0; i < initialCount; i++) 
+    {
+        T temp_num = queue.unqueue();
+        if (temp_num == value) 
+        {
+            counter++;
+        }
+        queue.queue(temp_num);
+    }
+    return counter;
+}
+
 void displayMenu() 
 {
     cout << "1. Добавить элемент в очередь\n";
@@ -64,13 +128,13 @@ int main()
             }
             case 5: 
             {
-                queue.insertBeforeNegatives();
+                insertBeforeNegatives(queue);
                 cout << "Вставка выполнена.\n";
                 break;
             }
             case 6:
             {
-                queue.removeNegatives();
+                removeNegatives(queue);
                 cout << "Отрицательные числа удалены.\n";
                 break;
             }
@@ -79,7 +143,7 @@ int main()
                 int value;
                 cout << "Введите число для подсчета: ";
                 cin >> value;
-                int occurrences = queue.countOccurrences(value);
+                int occurrences = countOccurrences(queue, value);
                 cout << "Число " << value << " встречается " << occurrences << " раз(а).\n";
                 break;
             }
