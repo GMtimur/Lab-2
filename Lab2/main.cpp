@@ -8,22 +8,17 @@ using namespace std;
 /// Вставляет число 1 перед каждым отрицательным числом в очереди.
 /// </summary>
 /// <param name="queue">Очередь, в которую нужно вставить элементы.</param>
-template <typename T>
-void insertBeforeNegatives(Queue<T>& queue) 
+void insertBeforeNegatives(Queue<int>& queue) 
 {
     int initialCount = queue.count();
     for (int i = 0; i < initialCount; i++) 
     {
-        T temp_num = queue.unqueue();
+        int temp_num = queue.unqueue();
         if (temp_num < 0) 
         {
             queue.queue(1);
-            queue.queue(temp_num);
         } 
-        else 
-        {
-            queue.queue(temp_num);
-        }
+        queue.queue(temp_num);
     }
 }
 
@@ -31,13 +26,12 @@ void insertBeforeNegatives(Queue<T>& queue)
 /// Удаляет все отрицательные числа из очереди.
 /// </summary>
 /// <param name="queue">Очередь, из которой нужно удалить элементы.</param>
-template <typename T>
-void removeNegatives(Queue<T>& queue) 
+void removeNegatives(Queue<int>& queue) 
 {
     int initialCount = queue.count();
     for (int i = 0; i < initialCount; i++) 
     {
-        T temp_num = queue.unqueue();
+        int temp_num = queue.unqueue();
         if (temp_num >= 0) 
         {
             queue.queue(temp_num);
@@ -51,14 +45,12 @@ void removeNegatives(Queue<T>& queue)
 /// <param name="queue">Очередь, в которой нужно подсчитать вхождения.</param>
 /// <param name="value">Число, количество вхождений которого нужно подсчитать.</param>
 /// <returns>Количество вхождений числа в очереди.</returns>
-template <typename T>
-int countOccurrences(Queue<T>& queue, T value) 
+int countOccurrences(Queue<int>& queue, int value) 
 {
     int counter = 0;
-    int initialCount = queue.count();
-    for (int i = 0; i < initialCount; i++) 
+    for (int i = 0; i < queue.count(); i++) 
     {
-        T temp_num = queue.unqueue();
+        int temp_num = queue.unqueue();
         if (temp_num == value) 
         {
             counter++;
@@ -88,9 +80,14 @@ int main()
     while (true) 
     {
         displayMenu();
-        cin >> choice;
+        while (!(cin >> choice)) 
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Ошибка: введите число от 1 до 8.\n";
+            displayMenu();
+        }
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
         switch (choice) 
         {
             case 1: 
@@ -99,7 +96,7 @@ int main()
                 cout << "Введите число: ";
                 cin >> num;
                 queue.queue(num);
-                cout << "Элемент добавлен.\n";
+                cout << "Элемент добавлен." << endl;
                 break;
             }
             case 2: 
@@ -107,35 +104,49 @@ int main()
                 try 
                 {
                     int item = queue.unqueue();
-                    cout << "Извлеченный элемент: " << item << "\n";
+                    cout << "Извлеченный элемент: " << item << endl;
                 } 
                 catch (const out_of_range& e) 
                 {
-                    cout << e.what() << "\n";
+                    cout << e.what() << endl;
                 }
                 break;
             }
             case 3: 
             {
-                cout << "Количество элементов в очереди: " << queue.count() << "\n";
+                cout << "Количество элементов в очереди: " << queue.count() << endl;
                 break;
             }
             case 4: 
             {
                 queue.clear();
-                cout << "Очередь очищена.\n";
+                cout << "Очередь очищена." << endl;
                 break;
             }
             case 5: 
             {
-                insertBeforeNegatives(queue);
-                cout << "Вставка выполнена.\n";
+                if(queue.count() == 0)
+                {
+                    cout << "Очередь была пуста" << endl;
+                }
+                else
+                {
+                    insertBeforeNegatives(queue);
+                    cout << "Вставка выполнена." << endl;
+                }
                 break;
             }
             case 6:
             {
-                removeNegatives(queue);
-                cout << "Отрицательные числа удалены.\n";
+                if(queue.count() == 0)
+                {
+                    cout << "Очередь была пуста" << endl;
+                }
+                else
+                {
+                    removeNegatives(queue);
+                    cout << "Отрицательные числа удалены." << endl;
+                }
                 break;
             }
             case 7:
@@ -144,7 +155,7 @@ int main()
                 cout << "Введите число для подсчета: ";
                 cin >> value;
                 int occurrences = countOccurrences(queue, value);
-                cout << "Число " << value << " встречается " << occurrences << " раз(а).\n";
+                cout << "Число " << value << " встречается " << occurrences << " раз(а)." << endl;
                 break;
             }
             case 8: 
@@ -153,11 +164,11 @@ int main()
             }
             default: 
             {
-                cout << "Неверный выбор.\n";
+                cout << "Неверный выбор." << endl;
                 break;
             }
         }
-        cout << "\n";
+        cout << endl;
     }
     return 0;
 }

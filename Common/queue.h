@@ -1,5 +1,6 @@
 #pragma once
 #include <stdexcept>
+#include "node.h"
 
 using namespace std;
 
@@ -7,19 +8,13 @@ using namespace std;
 /// Класс `Queue` реализует структуру данных "очередь" с использованием связного списка.
 /// Очередь работает по принципу "Первый пришел, первый вышел" (FIFO — First In, First Out).
 /// </summary>
-/// <typeparam name="T">Тип данных, хранящихся в очереди.</typeparam>ы
+/// <typeparam name="T">Тип данных, хранящихся в очереди.</typeparam>
 template <typename T>
 class Queue 
 {
 private:
-    struct Node 
-    {
-        T data;
-        Node* next;
-        Node(T data, Node* next = nullptr) : data(data), next(next) {}
-    };
-    Node* head;
-    Node* tail;
+    Node<T>* head;
+    Node<T>* tail;
     int counter;
 
 public:
@@ -42,7 +37,7 @@ public:
     /// <param name="data">Элемент, который нужно добавить в очередь.</param>
     void queue(T data) 
     {
-        Node* newNode = new Node(data);
+        Node<T>* newNode = new Node<T>(data);
         if (tail == nullptr) 
         {
             head = tail = newNode;
@@ -66,7 +61,7 @@ public:
         {
             throw out_of_range("Очередь пуста.");
         }
-        Node* temp = head;
+        Node<T>* temp = head;
         T data = temp->data;
         head = head->next;
         if (head == nullptr) 
@@ -94,7 +89,7 @@ public:
     {
         while (head != nullptr) 
         {
-            Node* temp = head;
+            Node<T>* temp = head;
             head = head->next;
             delete temp;
         }
