@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include "node.h"
 
 using namespace std;
 
@@ -12,15 +13,8 @@ template <typename T>
 class CycleList 
 {
 private:
-    struct Node 
-    {
-        T data;
-        Node* next;
-        Node(T data) : data(data), next(nullptr) {}
-    };
-
-    Node* head;
-    Node* tail;
+    Node<T>* head;
+    Node<T>* tail;
     int counter;
 
 public:
@@ -43,7 +37,7 @@ public:
     /// <param name="data">Данные для добавления.</param>
     void add(T data) 
     {
-        Node* newNode = new Node(data);
+        Node<T>* newNode = new Node<T>(data);
         if (head == nullptr) 
         {
             head = tail = newNode;
@@ -75,7 +69,7 @@ public:
             add(data);
             return;
         }
-        Node* newNode = new Node(data);
+        Node<T>* newNode = new Node<T>(data);
         if (index == 0) 
         {
             newNode->next = head;
@@ -84,7 +78,7 @@ public:
         }
         else
         {
-            Node* current = head;
+            Node<T>* current = head;
             for (int i = 0; i < index - 1; i++)
             {
                 current = current->next;
@@ -106,7 +100,7 @@ public:
         {
             throw out_of_range("Index out of range");
         }
-        Node* toDelete;
+        Node<T>* toDelete;
         if (index == 0)
         {
             toDelete = head;
@@ -119,7 +113,7 @@ public:
         }
         else
         {
-            Node* current = head;
+            Node<T>* current = head;
             for (int i = 0; i < index - 1; i++)
             {
                 current = current->next;
@@ -147,7 +141,7 @@ public:
         {
             throw out_of_range("Index out of range");
         }
-        Node* current = head;
+        Node<T>* current = head;
         for (int i = 0; i < index; i++)
         {
             current = current->next;
@@ -172,7 +166,7 @@ public:
     int countOccurrences(T data) const
     {
         int cnt = 0;
-        Node* current = head;
+        Node<T>* current = head;
         for (int i = 0; i < counter; i++)
         {
             if (current->data == data)

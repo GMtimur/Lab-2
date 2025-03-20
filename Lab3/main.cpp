@@ -53,6 +53,22 @@ void printList(CycleList<int>& list)
     cout << endl;
 }
 
+void displayMenu()
+{
+    cout << "1. Добавить элемент\n";
+    cout << "2. Вставить элемент\n";
+    cout << "3. Удалить элемент по индексу\n";
+    cout << "4. Получить элемент по индексу\n";
+    cout << "5. Посчитать количество элементов\n";
+    cout << "6. Посчитать количество вхождений значения\n";
+    cout << "7. Очистить список\n";
+    cout << "8. Вставить 1 перед каждым отрицательным элементом\n";
+    cout << "9. Удалить все отрицательные элементы\n";
+    cout << "10. Вывести список\n";
+    cout << "0. Выйти\n";
+    cout << "Выберите опцию: ";
+}
+
 int main()
 {
     CycleList<int> list;
@@ -60,20 +76,14 @@ int main()
 
     while (true)
     {
-        cout << "1. Добавить элемент\n";
-        cout << "2. Вставить элемент\n";
-        cout << "3. Удалить элемент по индексу\n";
-        cout << "4. Получить элемент по индексу\n";
-        cout << "5. Посчитать количество элементов\n";
-        cout << "6. Посчитать количество вхождений значения\n";
-        cout << "7. Очистить список\n";
-        cout << "8. Вставить 1 перед каждым отрицательным элементом\n";
-        cout << "9. Удалить все отрицательные элементы\n";
-        cout << "10. Вывести список\n";
-        cout << "0. Выйти\n";
-        cout << "Выберите опцию: ";
-        cin >> choice;
-
+        displayMenu();
+        while (!(cin >> choice)) 
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Ошибка: введите число от 0 до 10." << endl;
+            displayMenu();
+        }
         switch (choice)
         {
             case 1:
@@ -113,15 +123,29 @@ int main()
                 break;
             case 7:
                 list.clear();
-                cout << "Список очищен.\n";
+                cout << "Список очищен." << endl;
                 break;
             case 8:
-                insertBeforeNegatives(list);
-                cout << "Вставлены 1 перед отрицательными элементами.\n";
+                if(list.count() == 0)
+                {
+                    cout << "Список пуст" << endl;
+                }
+                else
+                {
+                    insertBeforeNegatives(list);
+                    cout << "Вставлены 1 перед отрицательными элементами." << endl;
+                }
                 break;
             case 9:
-                removeNegatives(list);
-                cout << "Отрицательные элементы удалены.\n";
+                if(list.count() == 0)
+                {
+                    cout << "Список пуст" << endl;
+                }
+                else
+                {
+                    removeNegatives(list);
+                    cout << "Отрицательные элементы удалены." << endl;
+                }
                 break;
             case 10:
                 printList(list);
@@ -129,7 +153,7 @@ int main()
             case 0:
                 return 0;
             default:
-                cout << "Неверная опция.\n";
+                cout << "Неверная опция." << endl;
         }
     }
 
