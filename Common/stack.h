@@ -77,7 +77,7 @@ public:
 
     /// <summary>
     /// Очищает стек, удаляя все элементы.
-    /// </summary>
+    /// </summary >
     void clear() 
     {
         while (top != nullptr) 
