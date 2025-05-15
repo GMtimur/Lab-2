@@ -5,23 +5,64 @@
 using namespace std;
 
 /// <summary>
-/// Класс `CycleList` реализует структуру данных "односвязный циклический список".
-/// Список поддерживает произвольный доступ к элементам и основные операции: добавление, вставку, удаление и очистку.
+/// Класс `CycleList` реализует структуру данных "односвязный циклический список"
+/// с минимальным хранением состояния (только tail pointer).
 /// </summary>
 /// <typeparam name="T">Тип данных, хранящихся в списке.</typeparam>
 template <typename T>
 class CycleList 
 {
 private:
-    Node<T>* head;
     Node<T>* tail;
     int counter;
+
+    /// <summary>
+    /// Возвращает указатель на голову списка (первый элемент).
+    /// Для пустого списка возвращает nullptr.
+    /// </summary>
+    /// <returns>Указатель на головной узел списка.</returns>
+    Node<T>* head() const
+    {
+        if (tail == nullptr)
+        {
+            return nullptr;
+        }
+        return tail->next;
+    }
+
+    Node<T>* getNodeAt(int index) const 
+{
+    if (index < 0 || index >= counter) 
+    {
+        throw out_of_range("Index out of range");
+    }
+
+    if (index <= counter / 2) 
+    {
+        // Идём от head вперед
+        Node<T>* current = head();
+        for (int i = 0; i < index; i++) 
+        {
+            current = current->next;
+        }
+        return current;
+    } 
+    else 
+    {
+        Node<T>* current = tail;
+        for (int i = counter; i > index; i--) 
+        {
+            current = current->next;
+        }
+        return current;
+    }
+}
 
 public:
     /// <summary>
     /// Конструктор по умолчанию.
     /// </summary>
-    CycleList() : head(nullptr), tail(nullptr), counter(0) {}
+    CycleList() : tail(nullptr), counter(0) {}
 
     /// <summary>
     /// Деструктор. Очищает список при уничтожении объекта.
@@ -38,16 +79,16 @@ public:
     void add(T data) 
     {
         Node<T>* newNode = new Node<T>(data);
-        if (head == nullptr) 
+        if (tail == nullptr) 
         {
-            head = tail = newNode;
-            tail->next = head;
+            tail = newNode;
+            tail->next = tail;
         } 
-        else
+        else 
         {
+            newNode->next = tail->next;
             tail->next = newNode;
             tail = newNode;
-            tail->next = head;
         }
         counter++;
     }
@@ -60,31 +101,25 @@ public:
     /// <exception cref="out_of_range">Если индекс выходит за пределы списка.</exception>
     void insert(int index, T data) 
     {
-        if (index < 0 || index > counter)
+        if (index < 0) 
         {
             throw out_of_range("Index out of range");
         }
+
+        Node<T>* newNode = new Node<T>(data);
         if (index == counter) 
         {
-            add(data);
+            add(data);  // Вставка в конец
             return;
         }
-        Node<T>* newNode = new Node<T>(data);
+
+        Node<T>* prev = (index == 0) ? tail : getNodeAt(index - 1);
+        newNode->next = prev->next;
+        prev->next = newNode;
+        
         if (index == 0) 
         {
-            newNode->next = head;
-            head = newNode;
-            tail->next = head;
-        }
-        else
-        {
-            Node<T>* current = head;
-            for (int i = 0; i < index - 1; i++)
-            {
-                current = current->next;
-            }
-            newNode->next = current->next;
-            current->next = newNode;
+            tail->next = newNode;  // Обновляем head (tail->next)
         }
         counter++;
     }
@@ -94,37 +129,38 @@ public:
     /// </summary>
     /// <param name="index">Позиция для удаления (индексация с 0).</param>
     /// <exception cref="out_of_range">Если индекс выходит за пределы списка.</exception>
-    void removeAt(int index)
+    void removeAt(int index) 
     {
-        if (index < 0 || index >= counter)
+        if (index < 0 || index >= counter) 
         {
             throw out_of_range("Index out of range");
         }
+
         Node<T>* toDelete;
-        if (index == 0)
+        if (index == 0) 
         {
-            toDelete = head;
-            head = head->next;
-            tail->next = head;
-            if (counter == 1)
+            toDelete = head();
+            if (counter == 1) 
             {
-                head = tail = nullptr;
+                tail = nullptr;
+            } 
+            else 
+            {
+                tail->next = toDelete->next;
+            }
+        } 
+        else 
+        {
+            Node<T>* prev = getNodeAt(index - 1);
+            toDelete = prev->next;
+            prev->next = toDelete->next;
+            
+            if (index == counter - 1) 
+            {
+                tail = prev;
             }
         }
-        else
-        {
-            Node<T>* current = head;
-            for (int i = 0; i < index - 1; i++)
-            {
-                current = current->next;
-            }
-            toDelete = current->next;
-            current->next = toDelete->next;
-            if (index == counter - 1)
-            {
-                tail = current;
-            }
-        }
+
         delete toDelete;
         counter--;
     }
@@ -135,18 +171,14 @@ public:
     /// <param name="index">Индекс элемента (индексация с 0).</param>
     /// <returns>Ссылка на данные элемента.</returns>
     /// <exception cref="out_of_range">Если индекс выходит за пределы списка.</exception>
-    T& operator[](const int index)
+    T& operator[](int index) 
     {
-        if (index < 0 || index >= counter)
-        {
-            throw out_of_range("Index out of range");
-        }
-        Node<T>* current = head;
-        for (int i = 0; i < index; i++)
-        {
-            current = current->next;
-        }
-        return current->data;
+        return getNodeAt(index)->data;
+    }
+
+    const T& operator[](int index) const 
+    {
+        return getNodeAt(index)->data;
     }
 
     /// <summary>
@@ -165,8 +197,10 @@ public:
     /// <returns>Количество вхождений.</returns>
     int countOccurrences(T data) const
     {
+        if (counter == 0) return 0;
+        
         int cnt = 0;
-        Node<T>* current = head;
+        Node<T>* current = head();
         for (int i = 0; i < counter; i++)
         {
             if (current->data == data)
@@ -183,9 +217,16 @@ public:
     /// </summary>
     void clear()
     {
-        while (counter > 0)
+        if (counter == 0) return;
+        
+        Node<T>* current = head();
+        for (int i = 0; i < counter; i++)
         {
-            removeAt(0);
+            Node<T>* next = current->next;
+            delete current;
+            current = next;
         }
+        tail = nullptr;
+        counter = 0;
     }
 };
